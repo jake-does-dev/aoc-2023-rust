@@ -30,7 +30,9 @@ command = [
     "-W",
     "clippy::unwrap_used",
     "-W",
-    "clippy::expect_used",
+    "clippy::suspicious",
+#    "-W",
+#    "clippy::expect_used",
 ]
 need_stdout = false
 

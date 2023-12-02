@@ -28,11 +28,7 @@ command = [
     "-W",
     "clippy::nursery",
     "-W",
-    "clippy::unwrap_used",
-    "-W",
     "clippy::suspicious",
-#    "-W",
-#    "clippy::expect_used",
 ]
 need_stdout = false
 

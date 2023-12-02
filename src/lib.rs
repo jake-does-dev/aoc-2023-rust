@@ -1,6 +1,7 @@
 use std::fmt::Display;
 
 pub mod day01;
+pub mod day02;
 
 #[derive(Debug)]
 pub enum Part {

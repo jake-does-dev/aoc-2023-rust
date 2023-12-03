@@ -122,22 +122,22 @@ mod tests {
     use super::*;
 
     #[test]
-    fn part_one_example_input() {
+    fn day02_part_one_example_input() {
         assert_eq!(part_one(include_str!("inputs/day02_example.txt"),), 8);
     }
 
     #[test]
-    fn part_one_puzzle_input() {
+    fn day02_part_one_puzzle_input() {
         assert_eq!(part_one(include_str!("inputs/day02_puzzle.txt"),), 2268);
     }
 
     #[test]
-    fn part_two_example_input() {
+    fn day02_part_two_example_input() {
         assert_eq!(part_two(include_str!("inputs/day02_example.txt"),), 2286);
     }
 
     #[test]
-    fn part_two_puzzle_input() {
+    fn day02_part_two_puzzle_input() {
         assert_eq!(part_two(include_str!("inputs/day02_puzzle.txt"),), 63542);
     }
 }

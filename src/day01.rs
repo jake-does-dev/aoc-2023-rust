@@ -87,7 +87,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn part_one_example_input() {
+    fn day01_part_one_example_input() {
         assert_eq!(
             run(
                 include_str!("inputs/day01_part1_example.txt"),
@@ -98,7 +98,7 @@ mod tests {
     }
 
     #[test]
-    fn part_one_puzzle_input() {
+    fn day01_part_one_puzzle_input() {
         assert_eq!(
             run(
                 include_str!("inputs/day01_part1_puzzle.txt"),
@@ -109,7 +109,7 @@ mod tests {
     }
 
     #[test]
-    fn part_two_example_input() {
+    fn day01_part_two_example_input() {
         assert_eq!(
             run(
                 include_str!("inputs/day01_part2_example.txt"),
@@ -120,7 +120,7 @@ mod tests {
     }
 
     #[test]
-    fn part_two_puzzle_input() {
+    fn day01_part_two_puzzle_input() {
         assert_eq!(
             run(
                 include_str!("inputs/day01_part2_puzzle.txt"),

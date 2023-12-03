@@ -1,7 +1,7 @@
 use crate::{DayRunner, Part};
 use std::collections::HashMap;
 
-pub struct Day02 {}
+pub struct Day02;
 
 impl DayRunner for Day02 {
     fn run(part: Part) {
@@ -10,7 +10,7 @@ impl DayRunner for Day02 {
             Part::PartTwo => part_two(include_str!("inputs/day02_puzzle.txt")),
         };
 
-        Self::report_result("day01", part, result);
+        Self::report_result("day02", part, result);
     }
 }
 

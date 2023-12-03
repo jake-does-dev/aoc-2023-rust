@@ -1,6 +1,6 @@
 use crate::{DayRunner, Part};
 
-pub struct Day01 {}
+pub struct Day01;
 
 impl DayRunner for Day01 {
     fn run(part: Part) {

@@ -1,21 +1,22 @@
-use crate::{DayRunner, Part};
+use crate::{DayRunner, FileLoader, Part, TaskType};
 
+#[derive(Debug)]
 pub struct Day01;
 
 impl DayRunner for Day01 {
     fn run(part: Part) {
         let result = match part {
             Part::PartOne => run(
-                include_str!("inputs/day01_part1_puzzle.txt"),
+                &FileLoader::load_with_infix("01", "part1", &TaskType::Example),
                 &WordReplacement::Disabled,
             ),
             Part::PartTwo => run(
-                include_str!("inputs/day01_part2_puzzle.txt"),
+                &FileLoader::load_with_infix("01", "part2", &TaskType::Example),
                 &WordReplacement::Enabled,
             ),
         };
 
-        Self::report_result("day01", part, result);
+        Self::report_result(Self, part, result);
     }
 }
 
@@ -90,7 +91,7 @@ mod tests {
     fn day01_part_one_example_input() {
         assert_eq!(
             run(
-                include_str!("inputs/day01_part1_example.txt"),
+                &FileLoader::load_with_infix("01", "part1", &TaskType::Example),
                 &WordReplacement::Disabled
             ),
             142
@@ -101,7 +102,7 @@ mod tests {
     fn day01_part_one_puzzle_input() {
         assert_eq!(
             run(
-                include_str!("inputs/day01_part1_puzzle.txt"),
+                &FileLoader::load_with_infix("01", "part1", &TaskType::Puzzle),
                 &WordReplacement::Disabled
             ),
             54632
@@ -112,7 +113,7 @@ mod tests {
     fn day01_part_two_example_input() {
         assert_eq!(
             run(
-                include_str!("inputs/day01_part2_example.txt"),
+                &FileLoader::load_with_infix("01", "part2", &TaskType::Example),
                 &WordReplacement::Enabled
             ),
             281
@@ -123,7 +124,7 @@ mod tests {
     fn day01_part_two_puzzle_input() {
         assert_eq!(
             run(
-                include_str!("inputs/day01_part2_puzzle.txt"),
+                &FileLoader::load_with_infix("01", "part2", &TaskType::Puzzle),
                 &WordReplacement::Enabled
             ),
             54019

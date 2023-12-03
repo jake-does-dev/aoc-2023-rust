@@ -2,18 +2,19 @@ use std::fmt::Debug;
 
 use regex::Regex;
 
-use crate::{DayRunner, Part};
+use crate::{DayRunner, FileLoader, Part, TaskType};
 
+#[derive(Debug)]
 pub struct Day03;
 
 impl DayRunner for Day03 {
     fn run(part: Part) {
         let result = match part {
-            Part::PartOne => part_one(include_str!("inputs/day03_puzzle.txt")),
-            Part::PartTwo => part_two(include_str!("inputs/day03_puzzle.txt")),
+            Part::PartOne => part_one(&FileLoader::load("03", &TaskType::Puzzle)),
+            Part::PartTwo => part_two(&FileLoader::load("03", &TaskType::Puzzle)),
         };
 
-        Self::report_result("day03", part, result);
+        Self::report_result(Self, part, result);
     }
 }
 
@@ -165,23 +166,29 @@ mod tests {
 
     #[test]
     fn day03_part_one_example_input() {
-        assert_eq!(part_one(include_str!("inputs/day03_example.txt"),), 4361);
+        assert_eq!(part_one(&FileLoader::load("03", &TaskType::Example)), 4361);
     }
 
     #[test]
     fn day03_part_one_puzzle_input() {
-        assert_eq!(part_one(include_str!("inputs/day03_puzzle.txt"),), 556_057);
+        assert_eq!(
+            part_one(&FileLoader::load("03", &TaskType::Puzzle)),
+            556_057
+        );
     }
 
     #[test]
     fn day03_part_two_example_input() {
-        assert_eq!(part_two(include_str!("inputs/day03_example.txt"),), 467_835);
+        assert_eq!(
+            part_two(&FileLoader::load("03", &TaskType::Example)),
+            467_835
+        );
     }
 
     #[test]
     fn day03_part_two_puzzle_input() {
         assert_eq!(
-            part_two(include_str!("inputs/day03_puzzle.txt"),),
+            part_two(&FileLoader::load("03", &TaskType::Puzzle)),
             82_824_352
         );
     }

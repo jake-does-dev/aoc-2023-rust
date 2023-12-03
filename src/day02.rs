@@ -1,16 +1,17 @@
-use crate::{DayRunner, Part};
+use crate::{DayRunner, FileLoader, Part, TaskType};
 use std::collections::HashMap;
 
+#[derive(Debug)]
 pub struct Day02;
 
 impl DayRunner for Day02 {
     fn run(part: Part) {
         let result = match part {
-            Part::PartOne => part_one(include_str!("inputs/day02_puzzle.txt")),
-            Part::PartTwo => part_two(include_str!("inputs/day02_puzzle.txt")),
+            Part::PartOne => part_one(&FileLoader::load("02", &TaskType::Puzzle)),
+            Part::PartTwo => part_two(&FileLoader::load("02", &TaskType::Puzzle)),
         };
 
-        Self::report_result("day02", part, result);
+        Self::report_result(Self, part, result);
     }
 }
 
@@ -123,21 +124,21 @@ mod tests {
 
     #[test]
     fn day02_part_one_example_input() {
-        assert_eq!(part_one(include_str!("inputs/day02_example.txt"),), 8);
+        assert_eq!(part_one(&FileLoader::load("02", &TaskType::Example)), 8);
     }
 
     #[test]
     fn day02_part_one_puzzle_input() {
-        assert_eq!(part_one(include_str!("inputs/day02_puzzle.txt"),), 2268);
+        assert_eq!(part_one(&FileLoader::load("02", &TaskType::Puzzle)), 2268);
     }
 
     #[test]
     fn day02_part_two_example_input() {
-        assert_eq!(part_two(include_str!("inputs/day02_example.txt"),), 2286);
+        assert_eq!(part_two(&FileLoader::load("02", &TaskType::Example)), 2286);
     }
 
     #[test]
     fn day02_part_two_puzzle_input() {
-        assert_eq!(part_two(include_str!("inputs/day02_puzzle.txt"),), 63542);
+        assert_eq!(part_two(&FileLoader::load("02", &TaskType::Puzzle)), 63542);
     }
 }

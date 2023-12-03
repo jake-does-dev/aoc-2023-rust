@@ -10,10 +10,23 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Run tests
-      run: cargo test --verbose -- --skip puzzle
-      
+    - name: Build
+      run: cargo build --verbose
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Lint
+      run: cargo clippy --all-targets --color always -- -W clippy::pedantic -W clippy::nursery -W clippy::suspicious
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Lint
+        run: cargo test --verbose

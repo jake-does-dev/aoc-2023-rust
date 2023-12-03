@@ -1,6 +1,6 @@
 use std::fmt::Debug;
 
-use regex::Regex;
+use regex::{Captures, Regex};
 
 use crate::{DayRunner, FileLoader, Part, TaskType};
 
@@ -27,21 +27,6 @@ struct Number {
 }
 
 impl Number {
-    const fn new(
-        row_index: usize,
-        column_start_index: usize,
-        column_end_index: usize,
-        value: u32,
-    ) -> Self {
-        Self {
-            row_index,
-            column_start_index,
-            column_end_index,
-            value,
-            visited: false,
-        }
-    }
-
     fn visit(&mut self) {
         self.visited = true;
     }
@@ -121,43 +106,52 @@ fn part_two(data: &str) -> u32 {
 }
 
 fn extract_numbers(data: &str, numbers_pattern: &Regex) -> Vec<Number> {
-    let mut numbers: Vec<Number> = vec![];
+    data.lines()
+        .enumerate()
+        .flat_map(|(row_index, line)| {
+            numbers_pattern
+                .captures_iter(line)
+                .map(|captures| transform_matching_numbers(row_index, &captures))
+                .collect::<Vec<Number>>()
+        })
+        .collect::<Vec<Number>>()
+}
 
-    data.lines().enumerate().for_each(|(row_index, line)| {
-        numbers_pattern.captures_iter(line).for_each(|captures| {
-            let number = captures.get(0).unwrap();
-            let (column_start_index, column_end_index, value) = (
-                number.start(),
-                number.end(),
-                number.as_str().parse::<u32>().unwrap(),
-            );
-            numbers.push(Number::new(
-                row_index,
-                column_start_index,
-                column_end_index - 1, //the Regex crate has the end index as exclusive
-                value,
-            ));
-        });
-    });
-
-    numbers
+fn transform_matching_numbers(row_index: usize, captures: &Captures) -> Number {
+    let number = captures.get(0).unwrap();
+    let (column_start_index, column_end_index, value) = (
+        number.start(),
+        number.end(),
+        number.as_str().parse::<u32>().unwrap(),
+    );
+    Number {
+        row_index,
+        column_start_index,
+        column_end_index: column_end_index - 1, //the Regex crate has the end index as exclusive
+        value,
+        visited: false,
+    }
 }
 
 fn extract_symbols(data: &str, symbols_pattern: &Regex) -> Vec<Symbol> {
-    let mut symbols: Vec<Symbol> = vec![];
+    data.lines()
+        .enumerate()
+        .flat_map(|(row_index, line)| {
+            symbols_pattern
+                .captures_iter(line)
+                .map(|captures| transform_matching_symbols(row_index, &captures))
+                .collect::<Vec<Symbol>>()
+        })
+        .collect::<Vec<Symbol>>()
+}
 
-    data.lines().enumerate().for_each(|(row_index, line)| {
-        symbols_pattern.captures_iter(line).for_each(|captures| {
-            let symbol = captures.get(0).unwrap();
-            let column_index = symbol.start();
-            symbols.push(Symbol {
-                row_index,
-                column_index,
-            });
-        });
-    });
-
-    symbols
+fn transform_matching_symbols(row_index: usize, captures: &Captures) -> Symbol {
+    let symbol = captures.get(0).unwrap();
+    let column_index = symbol.start();
+    Symbol {
+        row_index,
+        column_index,
+    }
 }
 
 #[cfg(test)]

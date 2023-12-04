@@ -7,11 +7,11 @@ impl DayRunner for Day01 {
     fn run(part: Part) {
         let result = match part {
             Part::PartOne => run(
-                &FileLoader::load_with_infix("01", "part1", &TaskType::Example),
+                &FileLoader::load_with_infix("01", "part1", &TaskType::Puzzle),
                 &WordReplacement::Disabled,
             ),
             Part::PartTwo => run(
-                &FileLoader::load_with_infix("01", "part2", &TaskType::Example),
+                &FileLoader::load_with_infix("01", "part2", &TaskType::Puzzle),
                 &WordReplacement::Enabled,
             ),
         };

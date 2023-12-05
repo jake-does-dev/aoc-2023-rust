@@ -98,22 +98,22 @@ mod tests {
     use super::*;
 
     #[test]
-    fn day03_part_one_example_input() {
+    fn part_one_example_input() {
         assert_eq!(part_one(&FileLoader::load("04", &TaskType::Example)), 13);
     }
 
     #[test]
-    fn day03_part_one_puzzle_input() {
+    fn part_one_puzzle_input() {
         assert_eq!(part_one(&FileLoader::load("04", &TaskType::Puzzle)), 20855);
     }
 
     #[test]
-    fn day03_part_two_example_input() {
+    fn part_two_example_input() {
         assert_eq!(part_two(&FileLoader::load("04", &TaskType::Example)), 30);
     }
 
     #[test]
-    fn day03_part_two_puzzle_input() {
+    fn part_two_puzzle_input() {
         assert_eq!(
             part_two(&FileLoader::load("04", &TaskType::Puzzle)),
             5_489_600

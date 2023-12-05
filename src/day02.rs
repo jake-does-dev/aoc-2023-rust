@@ -123,22 +123,22 @@ mod tests {
     use super::*;
 
     #[test]
-    fn day02_part_one_example_input() {
+    fn part_one_example_input() {
         assert_eq!(part_one(&FileLoader::load("02", &TaskType::Example)), 8);
     }
 
     #[test]
-    fn day02_part_one_puzzle_input() {
+    fn part_one_puzzle_input() {
         assert_eq!(part_one(&FileLoader::load("02", &TaskType::Puzzle)), 2268);
     }
 
     #[test]
-    fn day02_part_two_example_input() {
+    fn part_two_example_input() {
         assert_eq!(part_two(&FileLoader::load("02", &TaskType::Example)), 2286);
     }
 
     #[test]
-    fn day02_part_two_puzzle_input() {
+    fn part_two_puzzle_input() {
         assert_eq!(part_two(&FileLoader::load("02", &TaskType::Puzzle)), 63542);
     }
 }

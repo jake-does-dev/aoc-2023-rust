@@ -88,7 +88,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn day01_part_one_example_input() {
+    fn part_one_example_input() {
         assert_eq!(
             run(
                 &FileLoader::load_with_infix("01", "part1", &TaskType::Example),
@@ -99,7 +99,7 @@ mod tests {
     }
 
     #[test]
-    fn day01_part_one_puzzle_input() {
+    fn part_one_puzzle_input() {
         assert_eq!(
             run(
                 &FileLoader::load_with_infix("01", "part1", &TaskType::Puzzle),
@@ -110,7 +110,7 @@ mod tests {
     }
 
     #[test]
-    fn day01_part_two_example_input() {
+    fn part_two_example_input() {
         assert_eq!(
             run(
                 &FileLoader::load_with_infix("01", "part2", &TaskType::Example),
@@ -121,7 +121,7 @@ mod tests {
     }
 
     #[test]
-    fn day01_part_two_puzzle_input() {
+    fn part_two_puzzle_input() {
         assert_eq!(
             run(
                 &FileLoader::load_with_infix("01", "part2", &TaskType::Puzzle),

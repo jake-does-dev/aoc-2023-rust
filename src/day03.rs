@@ -159,12 +159,12 @@ mod tests {
     use super::*;
 
     #[test]
-    fn day03_part_one_example_input() {
+    fn part_one_example_input() {
         assert_eq!(part_one(&FileLoader::load("03", &TaskType::Example)), 4361);
     }
 
     #[test]
-    fn day03_part_one_puzzle_input() {
+    fn part_one_puzzle_input() {
         assert_eq!(
             part_one(&FileLoader::load("03", &TaskType::Puzzle)),
             556_057
@@ -172,7 +172,7 @@ mod tests {
     }
 
     #[test]
-    fn day03_part_two_example_input() {
+    fn part_two_example_input() {
         assert_eq!(
             part_two(&FileLoader::load("03", &TaskType::Example)),
             467_835
@@ -180,7 +180,7 @@ mod tests {
     }
 
     #[test]
-    fn day03_part_two_puzzle_input() {
+    fn part_two_puzzle_input() {
         assert_eq!(
             part_two(&FileLoader::load("03", &TaskType::Puzzle)),
             82_824_352

@@ -9,229 +9,108 @@ pub struct Day05;
 impl DayRunner for Day05 {
     fn run(part: Part) {
         let result = match part {
-            Part::PartOne => run(
-                &FileLoader::load("05", &TaskType::Puzzle),
-                SeedInputType::Individual,
-            ),
-            Part::PartTwo => run(
-                &FileLoader::load("05", &TaskType::Puzzle),
-                SeedInputType::Range,
-            ),
+            Part::PartOne => part_one(&FileLoader::load("05", &TaskType::Puzzle)),
+            Part::PartTwo => part_two(&FileLoader::load("05", &TaskType::Puzzle)),
         };
 
         Self::report_result(Self, part, result);
     }
 }
 
-fn run(data: &str, seed_input_type: SeedInputType) -> u64 {
-    let groups = data.split("\n\n").collect::<Vec<&str>>();
-    match seed_input_type {
-        SeedInputType::Individual => min_location(IndividualSeeds::new(groups[0]), groups),
-        SeedInputType::Range => min_location(RangeSeeds::new(groups[0]), groups),
-    }
+fn part_one(data: &str) -> u64 {
+    let garden = Garden::new(data);
+    garden
+        .seed_numbers
+        .iter()
+        .map(|seed_number| garden.find_seed_location(*seed_number))
+        .min()
+        .unwrap()
 }
 
-fn min_location(mut seeds: impl SeedRetriever, groups: Vec<&str>) -> u64 {
+fn part_two(data: &str) -> u64 {
+    let garden = Garden::new(data);
+    let mut iter = garden.seed_numbers.iter();
+
     let mut min_location = u64::MAX;
-    let garden_mappings: Vec<GardenMapping> = vec![
-        GardenMapping::new(GardenMappingType::SeedToSoil, groups[1]),
-        GardenMapping::new(GardenMappingType::SoilToFertilizer, groups[2]),
-        GardenMapping::new(GardenMappingType::FertilizerToWater, groups[3]),
-        GardenMapping::new(GardenMappingType::WaterToLight, groups[4]),
-        GardenMapping::new(GardenMappingType::LightToTemperature, groups[5]),
-        GardenMapping::new(GardenMappingType::TemperatureToHumidity, groups[6]),
-        GardenMapping::new(GardenMappingType::HumidityToLocation, groups[7]),
-    ];
 
-    while let Some(seed_number) = seeds.next() {
-        let location = garden_mappings
-            .iter()
-            .fold(seed_number, |source, garden_mapping| {
-                garden_mapping.to_destination(source)
-            });
+    while let Some(start_seed) = iter.next() {
+        let amount = *iter.next().unwrap();
+        let ending_seed = *start_seed + amount;
 
-        min_location = min(location, min_location);
+        let mut current_seed = *start_seed;
+        while current_seed < ending_seed {
+            let location = garden.find_seed_location(current_seed);
+            min_location = min(min_location, location);
+            current_seed += 1;
+        }
     }
 
     min_location
 }
 
-enum SeedInputType {
-    Individual,
-    Range,
-}
-
-trait SeedRetriever {
-    fn next(&mut self) -> Option<u64>;
-}
-
-#[derive(Debug)]
-struct IndividualSeeds {
+struct Garden {
     seed_numbers: Vec<u64>,
-    index: usize,
-}
-
-impl IndividualSeeds {
-    fn new(data: &str) -> Self {
-        Self {
-            seed_numbers: split_seed_line_to_numbers(data),
-            index: 0,
-        }
-    }
-}
-
-impl SeedRetriever for IndividualSeeds {
-    fn next(&mut self) -> Option<u64> {
-        match self.seed_numbers.get(self.index) {
-            Some(seed_number) => {
-                self.index += 1;
-                Some(*seed_number)
-            }
-            None => None,
-        }
-    }
-}
-
-struct RangeSeeds {
-    seed_ranges: Vec<Vec<u64>>,
-    index: usize,
-    value_offset: u64,
-}
-
-impl RangeSeeds {
-    fn new(data: &str) -> Self {
-        let numbers = split_seed_line_to_numbers(data);
-        let seed_ranges: Vec<Vec<u64>> = numbers
-            .chunks(2)
-            .map(|chunk| {
-                let start = *chunk.first().unwrap();
-                let end = *chunk.first().unwrap() + *chunk.last().unwrap();
-                vec![start, end]
-            })
-            .collect();
-
-        Self {
-            seed_ranges,
-            index: 0,
-            value_offset: 0,
-        }
-    }
-}
-
-impl SeedRetriever for RangeSeeds {
-    fn next(&mut self) -> Option<u64> {
-        if self.index > self.seed_ranges.len() - 1 {
-            None
-        } else {
-            let current_range = self.seed_ranges.get(self.index);
-            match current_range {
-                None => {
-                    self.index += 1;
-                    self.value_offset = 0;
-                    let next_range = self.seed_ranges.get(self.index).unwrap();
-                    let start = *next_range.first().unwrap();
-                    Some(start)
-                }
-                Some(seed_range) => {
-                    let start = *seed_range.first().unwrap();
-                    let end = *seed_range.last().unwrap();
-                    let next_seed_value = start + self.value_offset;
-
-                    return if next_seed_value < end {
-                        self.value_offset += 1;
-                        Some(next_seed_value)
-                    } else if next_seed_value == end {
-                        self.index += 1;
-                        Some(end)
-                    } else {
-                        self.value_offset = 0;
-                        let next_range = self.seed_ranges.get(self.index).unwrap();
-                        let start = *next_range.first().unwrap();
-                        Some(start)
-                    };
-                }
-            }
-        }
-    }
-}
-
-fn split_seed_line_to_numbers(data: &str) -> Vec<u64> {
-    data.split_whitespace()
-        .filter(|value| *value != "seeds:")
-        .map(|value| value.parse::<u64>().unwrap())
-        .collect()
-}
-
-#[derive(Debug, Eq, PartialEq, Hash)]
-enum GardenMappingType {
-    SeedToSoil,
-    SoilToFertilizer,
-    FertilizerToWater,
-    WaterToLight,
-    LightToTemperature,
-    TemperatureToHumidity,
-    HumidityToLocation,
+    mappings: Vec<Vec<GardenRange>>,
 }
 
 #[derive(Debug)]
 struct GardenRange {
     destination_start: u64,
     source_start: u64,
-    length: u64,
+    amount: u64,
 }
 
-#[derive(Debug)]
-struct GardenMapping {
-    _mapping_type: GardenMappingType,
-    ranges: Vec<GardenRange>,
-}
+impl Garden {
+    fn new(data: &str) -> Self {
+        let groups = data.split("\n\n").collect::<Vec<&str>>();
+        let seed_numbers = groups[0]
+            .split_whitespace()
+            .filter(|value| *value != "seeds:")
+            .map(|value| value.parse::<u64>().unwrap())
+            .collect();
 
-impl GardenMapping {
-    fn new(mapping_type: GardenMappingType, data: &str) -> Self {
-        let lines = data.split('\n').collect::<Vec<&str>>();
-        let ranges = lines[1..]
+        let mappings = groups[1..]
             .iter()
-            .map(|line| line.split_whitespace().collect::<Vec<&str>>())
-            .map(|line| {
-                line.iter()
-                    .map(|value| value.parse::<u64>().unwrap())
-                    .collect::<Vec<u64>>()
+            .map(|group| {
+                let lines = group.split('\n').collect::<Vec<&str>>();
+                let ranges = lines[1..]
+                    .iter()
+                    .map(|line| line.split_whitespace().collect::<Vec<&str>>())
+                    .map(|line| {
+                        line.iter()
+                            .map(|value| value.parse::<u64>().unwrap())
+                            .collect::<Vec<u64>>()
+                    })
+                    .map(|line| GardenRange {
+                        destination_start: line[0],
+                        source_start: line[1],
+                        amount: line[2],
+                    })
+                    .collect::<Vec<GardenRange>>();
+
+                ranges
             })
-            .map(|line| GardenRange {
-                destination_start: line[0],
-                source_start: line[1],
-                length: line[2],
-            })
-            .collect::<Vec<GardenRange>>();
+            .collect::<Vec<Vec<GardenRange>>>();
 
         Self {
-            _mapping_type: mapping_type,
-            ranges,
+            seed_numbers,
+            mappings,
         }
     }
 
-    fn to_destination(&self, source_number: u64) -> u64 {
-        let target_range = self
-            .ranges
-            .iter()
-            .filter(|range| {
-                range.source_start <= source_number
-                    && source_number < range.source_start + range.length
-            })
-            .collect::<Vec<&GardenRange>>();
+    fn find_seed_location(&self, initial_number: u64) -> u64 {
+        let mut number = initial_number;
 
-        let destination = match &target_range.len() {
-            0 => source_number, // no mapping, so source = destination
-            1 => {
-                let target_range = target_range.first().unwrap();
-                source_number - target_range.source_start + target_range.destination_start
+        for mapping in &self.mappings {
+            for range in mapping {
+                if range.source_start <= number && number < range.source_start + range.amount {
+                    number = (number - range.source_start) + range.destination_start;
+                    break;
+                }
             }
-            _too_many => panic!(
-                "There should be at most one range resolved, but got multiple: {target_range:#?}"
-            ),
-        };
+        }
 
-        destination
+        number
     }
 }
 
@@ -241,47 +120,28 @@ mod tests {
 
     #[test]
     fn part_one_example_input() {
-        assert_eq!(
-            run(
-                &FileLoader::load("05", &TaskType::Example),
-                SeedInputType::Individual
-            ),
-            35
-        );
+        assert_eq!(part_one(&FileLoader::load("05", &TaskType::Example)), 35);
     }
 
     #[test]
     fn part_one_puzzle_input() {
         assert_eq!(
-            run(
-                &FileLoader::load("05", &TaskType::Puzzle),
-                SeedInputType::Individual
-            ),
+            part_one(&FileLoader::load("05", &TaskType::Puzzle)),
             340_994_526
         );
     }
 
-    // #[ignore]
     #[test]
     fn part_two_example_input() {
-        assert_eq!(
-            run(
-                &FileLoader::load("05", &TaskType::Example),
-                SeedInputType::Range
-            ),
-            46
-        );
+        assert_eq!(part_two(&FileLoader::load("05", &TaskType::Example)), 46);
     }
 
-    // #[ignore]
+    #[ignore]
     #[test]
     fn part_two_puzzle_input() {
         assert_eq!(
-            run(
-                &FileLoader::load("05", &TaskType::Puzzle),
-                SeedInputType::Range
-            ),
-            5_489_610
+            part_two(&FileLoader::load("05", &TaskType::Puzzle)),
+            52_210_644
         );
     }
 }

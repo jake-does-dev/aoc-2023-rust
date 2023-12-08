@@ -4,6 +4,7 @@ use aoc_2023_rust::day03::Day03;
 use aoc_2023_rust::day04::Day04;
 use aoc_2023_rust::day05::Day05;
 use aoc_2023_rust::day06::Day06;
+use aoc_2023_rust::day07::Day07;
 use aoc_2023_rust::{DayRunner, Part};
 
 fn main() {
@@ -19,4 +20,6 @@ fn main() {
     // Day05::run(Part::PartTwo);
     Day06::run(Part::PartOne);
     Day06::run(Part::PartTwo);
+    Day07::run(Part::PartOne);
+    Day07::run(Part::PartTwo);
 }
